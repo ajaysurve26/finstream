@@ -1,0 +1,129 @@
+name: FinStream CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+env:
+  DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST }}
+  DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN }}
+  DATABRICKS_HTTP_PATH: ${{ secrets.DATABRICKS_HTTP_PATH }}
+  AZURE_STORAGE_KEY: ${{ secrets.AZURE_STORAGE_KEY }}
+
+jobs:
+  # ─── Job 1: Code Quality ───────────────────────────────
+  code-quality:
+    name: Code Quality Checks
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          pip install sqlfluff dbt-databricks
+
+      - name: Lint SQL models with SQLFluff
+        run: |
+          cd dbt_project/finstream_dbt
+          sqlfluff lint models/ --dialect spark || true
+
+      - name: Validate dbt project structure
+        run: |
+          cd dbt_project/finstream_dbt
+          dbt debug --profiles-dir .github/profiles
+
+  # ─── Job 2: dbt Tests ──────────────────────────────────
+  dbt-tests:
+    name: dbt Model Tests
+    runs-on: ubuntu-latest
+    needs: code-quality
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Install dbt
+        run: pip install dbt-databricks
+
+      - name: Run dbt models
+        run: |
+          cd dbt_project/finstream_dbt
+          dbt run --profiles-dir .github/profiles --select silver
+
+      - name: Run dbt tests
+        run: |
+          cd dbt_project/finstream_dbt
+          dbt test --profiles-dir .github/profiles --select silver
+
+      - name: Generate dbt docs
+        run: |
+          cd dbt_project/finstream_dbt
+          dbt docs generate --profiles-dir .github/profiles
+
+      - name: Upload dbt docs as artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: dbt-docs
+          path: dbt_project/finstream_dbt/target/
+
+  # ─── Job 3: Data Quality ───────────────────────────────
+  data-quality:
+    name: Data Quality Validation
+    runs-on: ubuntu-latest
+    needs: dbt-tests
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          pip install great-expectations databricks-sql-connector python-dotenv pandas
+
+      - name: Run Great Expectations validation
+        run: |
+          python3 great_expectations/validate_silver.py
+
+      - name: Upload validation report
+        uses: actions/upload-artifact@v3
+        with:
+          name: validation-report
+          path: great_expectations/
+
+  # ─── Job 4: Notify ─────────────────────────────────────
+  notify:
+    name: Pipeline Notification
+    runs-on: ubuntu-latest
+    needs: [code-quality, dbt-tests, data-quality]
+    if: always()
+    steps:
+      - name: Pipeline Success
+        if: ${{ needs.dbt-tests.result == 'success' && needs.data-quality.result == 'success' }}
+        run: |
+          echo "✅ FinStream CI/CD Pipeline PASSED"
+          echo "All dbt tests passed"
+          echo "All data quality checks passed"
+          echo "dbt docs generated successfully"
+
+      - name: Pipeline Failed
+        if: ${{ needs.dbt-tests.result == 'failure' || needs.data-quality.result == 'failure' }}
+        run: |
+          echo "❌ FinStream CI/CD Pipeline FAILED"
+          echo "Check the logs above for details"
+          exit 1
