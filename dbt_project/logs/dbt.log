@@ -1,0 +1,33 @@
+[0m21:49:09.962726 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'invocation', 'label': 'start', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x11238a2d0>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x11242c790>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x11242ce10>]}
+
+
+============================== 21:49:09.966649 | a0067569-b147-4f4e-8384-23d4e7ff580b ==============================
+[0m21:49:09.966649 [info ] [MainThread]: Running with dbt=1.11.8
+[0m21:49:09.967133 [debug] [MainThread]: running dbt with arguments {'fail_fast': 'False', 'empty': 'None', 'log_cache_events': 'False', 'static_parser': 'True', 'profiles_dir': '/Users/ajaysurve/.dbt', 'introspect': 'True', 'log_format': 'default', 'printer_width': '80', 'cache_selected_only': 'False', 'debug': 'False', 'quiet': 'False', 'invocation_command': 'dbt init finstream_dbt', 'version_check': 'True', 'partial_parse': 'True', 'write_json': 'True', 'use_experimental_parser': 'False', 'send_anonymous_usage_stats': 'True', 'no_print': 'None', 'target_path': 'None', 'indirect_selection': 'eager', 'warn_error_options': 'WarnErrorOptionsV2(error=[], warn=[], silence=[])', 'use_colors': 'True', 'warn_error': 'None', 'log_path': 'logs'}
+[0m21:49:09.978483 [debug] [MainThread]: Starter project path: /Users/ajaysurve/finstream/venv/lib/python3.11/site-packages/dbt/include/starter_project
+[0m21:49:09.984505 [info ] [MainThread]: 
+Your new dbt project "finstream_dbt" was created!
+
+For more information on how to configure the profiles.yml file,
+please consult the dbt documentation here:
+
+  https://docs.getdbt.com/docs/configure-your-profile
+
+One more thing:
+
+Need help? Don't hesitate to reach out to us via GitHub issues or on Slack:
+
+  https://community.getdbt.com/
+
+Happy modeling!
+
+[0m21:49:09.984806 [info ] [MainThread]: Setting up your profile.
+[0m21:49:21.830187 [debug] [MainThread]: Spark adapter: Setting pyhive.hive logging to ERROR
+[0m21:49:21.830724 [debug] [MainThread]: Spark adapter: Setting thrift.transport logging to ERROR
+[0m21:49:21.830982 [debug] [MainThread]: Spark adapter: Setting thrift.protocol logging to ERROR
+[0m21:57:14.759117 [info ] [MainThread]: Profile finstream_dbt written to /Users/ajaysurve/.dbt/profiles.yml using target's profile_template.yml and your supplied values. Run 'dbt debug' to validate the connection.
+[0m21:57:14.819579 [debug] [MainThread]: Resource report: {"command_name": "init", "command_success": true, "command_wall_clock_time": 484.9421, "process_in_blocks": "0", "process_kernel_time": 0.646528, "process_mem_max_rss": "183353344", "process_out_blocks": "0", "process_user_time": 2.40715}
+[0m21:57:14.827287 [debug] [MainThread]: Command `dbt init` succeeded at 21:57:14.826984 after 484.95 seconds
+[0m21:57:14.828810 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'invocation', 'label': 'end', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x1123fb390>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x11242cad0>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x1030b5950>]}
+[0m21:57:14.829920 [debug] [MainThread]: Flushing usage events
+[0m21:57:15.610004 [debug] [MainThread]: An error was encountered while trying to flush usage events

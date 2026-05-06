@@ -1,0 +1,39 @@
+version: 2
+
+models:
+  - name: stg_transactions
+    description: "Cleaned and normalized financial transactions from Bronze layer"
+    columns:
+      - name: transaction_id
+        description: "Unique transaction identifier"
+        tests:
+          - unique
+          - not_null
+
+      - name: user_id
+        description: "User who made the transaction"
+        tests:
+          - not_null
+
+      - name: amount
+        description: "Transaction amount"
+        tests:
+          - not_null
+
+      - name: currency
+        description: "Transaction currency"
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['USD', 'EUR', 'GBP', 'INR', 'AUD', 'CAD']
+
+      - name: transaction_type
+        description: "Type of transaction"
+        tests:
+          - accepted_values:
+              values: ['purchase', 'refund', 'transfer', 'withdrawal']
+
+      - name: is_valid_record
+        description: "Whether record passed data quality checks"
+        tests:
+          - not_null
