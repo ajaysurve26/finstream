@@ -1,0 +1,36 @@
+version: 2
+
+models:
+  - name: gold_hourly_summary
+    description: "Hourly aggregated transaction metrics by category and country"
+    columns:
+      - name: transaction_hour
+        tests:
+          - not_null
+      - name: total_transactions
+        tests:
+          - not_null
+      - name: fraud_rate_pct
+        tests:
+          - not_null
+
+  - name: gold_user_risk
+    description: "User level risk scoring based on transaction behaviour"
+    columns:
+      - name: user_id
+        tests:
+          - unique
+          - not_null
+      - name: risk_score
+        tests:
+          - not_null
+
+  - name: gold_fraud_by_country
+    description: "Fraud metrics aggregated by country and transaction type"
+    columns:
+      - name: country
+        tests:
+          - not_null
+      - name: fraud_rate_pct
+        tests:
+          - not_null
