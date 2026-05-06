@@ -4,23 +4,11 @@ A production-grade streaming data engineering project built on Azure, Databricks
 
 ## Architecture
 
-Fake Financial Data Generator
-↓
-Azure Event Hubs (Kafka-compatible)
-↓
-Databricks Structured Streaming
-↓
-┌─────────────────────────────────┐
-│         Delta Lake              │
-│  Bronze → Silver → Gold        │
-│  (Medallion Architecture)       │
-└─────────────────────────────────┘
-↓
-dbt Transformations + Tests
-↓
-Great Expectations Quality Gates
-↓
-Streamlit Live Dashboard
+![FinStream Architecture](assets/architecture.png)
+
+## Live Dashboard
+
+![FinStream Dashboard](assets/dashboard_screenshot.png)
 
 ## Tech Stack
 
