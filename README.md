@@ -1,7 +1,5 @@
 # 🛡️ FinStream — Real-time Financial Transaction Pipeline
 
-![FinStream Dashboard](assets/dashboard_screenshot.png)
-
 A production-grade streaming data engineering project built on Azure, Databricks and dbt.
 
 ## Architecture
